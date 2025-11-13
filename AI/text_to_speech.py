@@ -14,5 +14,5 @@ def generate_audio(text, output_file="output.wav"):
     print(f"Audio saved to {output_file}")
 
 if __name__ == "__main__":
-    sample_text = "Hi Bob I hope you are doing well! ."
-    generate_audio(sample_text, "output2.wav")
+    sample_text = "Hi Bob I hope you are doing well! What have you been up to lately?"
+    generate_audio(sample_text, "output2.mp3")
