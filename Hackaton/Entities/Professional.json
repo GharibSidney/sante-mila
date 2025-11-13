@@ -1,0 +1,47 @@
+{
+  "name": "Professional",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "description": "Full name of the medical professional"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "doctor",
+        "nurse",
+        "social_worker",
+        "psychiatrist",
+        "physical_therapist",
+        "emergency_specialist"
+      ],
+      "description": "Professional role"
+    },
+    "specialization": {
+      "type": "string",
+      "description": "Area of specialization"
+    },
+    "available": {
+      "type": "boolean",
+      "default": true,
+      "description": "Current availability status"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "email": {
+      "type": "string",
+      "description": "Contact email"
+    },
+    "average_response_time": {
+      "type": "string",
+      "description": "Average response time"
+    }
+  },
+  "required": [
+    "full_name",
+    "role"
+  ]
+}
