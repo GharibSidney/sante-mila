@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>OpenCV.js Face Detection</title>
+    <style>
+        body {
+            background: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        #canvasOutput {
+            border: 2px solid black;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>OpenCV.js Face Detection</h1>
+
+<!-- Camera video -->
+<video id="videoInput" width="640" height="480" autoplay muted></video>
+
+<!-- Output canvas -->
+<canvas id="canvasOutput" width="640" height="480"></canvas>
+
+<!-- Load OpenCV.js -->
+<script async src="https://docs.opencv.org/master/opencv.js" onload="onOpenCvReady();" ></script>
+
+<script>
+function onOpenCvReady() {
+    console.log("OpenCV.js ready");
+
+    // Load cascade into memory
+    cv.FS_createPreloadedFile('/', 'haarcascade_frontalface_default.xml',
+        'haarcascade_frontalface_default.xml', true, false,
+        () => {
+            console.log("Cascade loaded!");
+            startCamera();    // start webcam only after xml is ready
+        },
+        (err) => { console.error(err); }
+    );
+}
+
+function startCamera() {
+    const video = document.getElementById('videoInput');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+            video.onloadedmetadata = () => {
+                video.play();
+                startFaceDetection();
+            }
+        });
+}
+
+function startFaceDetection() {
+    const video = document.getElementById("videoInput");
+    const canvas = document.getElementById("canvasOutput");
+    const ctx = canvas.getContext("2d");
+
+    let cap = new cv.VideoCapture(video);
+    let frame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+    let gray = new cv.Mat();
+    let faces = new cv.RectVector();
+    let classifier = new cv.CascadeClassifier();
+
+    classifier.load('haarcascade_frontalface_default.xml');
+
+    function processVideo() {
+        cap.read(frame);
+        cv.cvtColor(frame, gray, cv.COLOR_RGBA2GRAY);
+        classifier.detectMultiScale(gray, faces);
+
+        ctx.drawImage(video, 0, 0);
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 3;
+
+        for (let i = 0; i < faces.size(); i++) {
+            const f = faces.get(i);
+            ctx.strokeRect(f.x, f.y, f.width, f.height);
+        }
+
+        requestAnimationFrame(processVideo);
+    }
+
+    requestAnimationFrame(processVideo);
+}
+</script>
+
+
+</body>
+</html>
