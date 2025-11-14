@@ -8,3 +8,4 @@ git+https://github.com/openai/whisper.git
 pyttsx3
 torch==2.7.1+cu118
 torchaudio==2.7.1+cu118
+opencv-python
